@@ -14,5 +14,6 @@
   ],
   "require": {
     "ramsey/uuid": "^4.7"
-  }
+  },
+  "license": "MIT"
 }
