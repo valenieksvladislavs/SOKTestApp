@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # PHP-FPM
+  php:
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    container_name: soktestapp_php
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+
+  # Nginx
+  nginx:
+    image: nginx:latest
+    container_name: soktestapp_nginx
+    depends_on:
+      - php
+      - db
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      
+  db:
+    image: mysql:8.0
+    container_name: soktestapp_db
+    environment:
+      MYSQL_ROOT_PASSWORD: soktestapp
+      MYSQL_DATABASE: soktestapp
+      MYSQL_USER: soktestapp
+      MYSQL_PASSWORD: soktestapp
+    ports:
+      - "13306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/db:/docker-entrypoint-initdb.d
+      
+  node:
+    image: node:22
+    container_name: soktestapp_node
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
+      - php
+    command: sh -c "
+      cd /usr/src/app/src && \
+      npm install && \
+      npm run build && \
+      tail -f /dev/null"
+
+volumes:
+  db_data:
