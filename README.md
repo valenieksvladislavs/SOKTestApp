@@ -20,7 +20,7 @@ No other local installation of PHP, MySQL, or Nginx is required.
 1. **Clone** the repository:
 
 ```bash
-git clone https://github.com/<user>/<repo>.git
+git clone https://github.com/valenieksvladislavs/SOKTestApp.git
 cd <repo>
 ```
 
